@@ -1,33 +1,45 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 
+import CounterStore from './stores/CounterStore';
+import * as Actions from './Actions'
+
 class Counter extends Component {
   constructor(props) {
     super(props);
+    this.onChange = this.onChange.bind(this);
     this.onClickIncrementButton = this.onClickIncrementButton.bind(this);
     this.onClickDecrementButton = this.onClickDecrementButton.bind(this);
     this.state = {
-      count: this.props.initValue
+      count: CounterStore.getCounterValues()[props.caption]
     };
     console.log('enter Counter constructor: ' + this.props.caption);
   }
+
   componentWillMount() {
     console.log('component Counter will mount: ' + this.props.caption);
   }
+
   componentDidMount() {
+    CounterStore.addChangeListener(this.onChange);
     console.log('component Counter did mount: ' + this.props.caption);
   }
+
   componentWillReceiveProps(nextProps) {
     console.log('component Counter will receive props: ' + this.props.caption);
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     let should = (nextProps.caption !== this.props.caption) || (nextState.count !== this.state.count);
     console.log('component Counter should update? ' + should + " " + this.props.caption + " " + nextProps.caption);
     return should;
   }
+
   componentWillUnmount() {
+    CounterStore.removeChangeListener(this.onChange);
     console.log('compoent Counter will unmount: ' + this.props.caption);
   }
+
   render() {
     const { caption } = this.props;
     console.log('component Counter rendered: ' + this.props.caption);
@@ -41,31 +53,21 @@ class Counter extends Component {
   }
 
   onClickIncrementButton() {
-    this.updateCount(true);
+    Actions.increment(this.props.caption);
   }
 
   onClickDecrementButton() {
-    this.updateCount(false);
+    Actions.decrement(this.props.caption);
   }
 
-  updateCount(isIncrement) {
-    const previousValue = this.state.count;
-    const newValue = isIncrement ? previousValue + 1 : previousValue - 1;
-    this.setState({ count: newValue })
-    this.props.onUpdate(newValue, previousValue)
+  onChange() {
+    const newCount = CounterStore.getCounterValues()[this.props.caption];
+    this.setState({count: newCount});
   }
-
 }
 
 Counter.propTypes = {
-  caption: PropTypes.string.isRequired,
-  initValue: PropTypes.number,
-  onUpdate: PropTypes.func
-};
-
-Counter.defaultProps = {
-  initValue: 0,
-  onUpdate: f => f
+  caption: PropTypes.string.isRequired
 };
 
 export default Counter;
