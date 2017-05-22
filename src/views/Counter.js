@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-
-import CounterStore from './stores/CounterStore';
-import * as Actions from './Actions'
+import * as Actions from '../Actions';
+import store from '../Store';
 
 class Counter extends Component {
   constructor(props) {
@@ -10,9 +9,8 @@ class Counter extends Component {
     this.onChange = this.onChange.bind(this);
     this.onClickIncrementButton = this.onClickIncrementButton.bind(this);
     this.onClickDecrementButton = this.onClickDecrementButton.bind(this);
-    this.state = {
-      count: CounterStore.getCounterValues()[props.caption]
-    };
+
+    this.state = this.getOwnState();
     console.log('enter Counter constructor: ' + this.props.caption);
   }
 
@@ -21,7 +19,7 @@ class Counter extends Component {
   }
 
   componentDidMount() {
-    CounterStore.addChangeListener(this.onChange);
+    store.subscribe(this.onChange);
     console.log('component Counter did mount: ' + this.props.caption);
   }
 
@@ -36,7 +34,7 @@ class Counter extends Component {
   }
 
   componentWillUnmount() {
-    CounterStore.removeChangeListener(this.onChange);
+    store.unsubscribe(this.onchange);
     console.log('compoent Counter will unmount: ' + this.props.caption);
   }
 
@@ -53,16 +51,21 @@ class Counter extends Component {
   }
 
   onClickIncrementButton() {
-    Actions.increment(this.props.caption);
+    store.dispatch(Actions.increment(this.props.caption));
   }
 
   onClickDecrementButton() {
-    Actions.decrement(this.props.caption);
+    store.dispatch(Actions.decrement(this.props.caption));
   }
 
   onChange() {
-    const newCount = CounterStore.getCounterValues()[this.props.caption];
-    this.setState({count: newCount});
+    this.setState(this.getOwnState());
+  }
+
+  getOwnState() {
+    return {
+      count: store.getState()[this.props.caption]
+    };
   }
 }
 

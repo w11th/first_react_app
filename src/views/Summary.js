@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
-import SummaryStore from './stores/SummaryStore';
+import store from '../Store';
 
 class Summary extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    this.state = {
-      summary: SummaryStore.getSummary()
-    }
+    this.state = this.getOwnState();
   }
 
   componentDidMount() {
-    SummaryStore.addChangeListener(this.onChange);
+    store.subscribe(this.onChange);
   }
 
   componentWillUnmount() {
-    SummaryStore.removeChangeListener(this.onChange);
+    store.unsubscribe(this.onChange);
   }
 
   render() {
@@ -23,10 +21,22 @@ class Summary extends Component {
       <div>Total Count: { this.state.summary }</div>
     );
   }
+
   onChange() {
-    const newSummary = SummaryStore.getSummary();
-    this.setState({summary: newSummary});
+    this.setState(this.getOwnState());
   }
+
+  getOwnState() {
+    const state = store.getState();
+    let sum = 0;
+    for(const key in state) {
+      if (state.hasOwnProperty(key)) {
+        sum += state[key];
+      }
+    }
+    return { summary: sum };
+  }
+
 }
 
 export default Summary;
