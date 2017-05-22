@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import Counter from './Counter';
-import Summary from './Summary';
+import CounterContainer from './Counter';
+import SummaryContainer from './Summary';
 
 class ControlPanel extends Component {
   render() {
     return (
       <div>
-        <Counter caption="First" />
-        <Counter caption="Second" />
-        <Counter caption="Third" />
+        <CounterContainer caption="First" />
+        <CounterContainer caption="Second" />
+        <CounterContainer caption="Third" />
         <hr />
         <button onClick={ () => this.forceUpdate() }>Click me to repaint!</button>
-        <Summary />
+        <SummaryContainer />
       </div>
     );
   }

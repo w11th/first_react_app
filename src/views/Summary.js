@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import store from '../Store';
 
 class Summary extends Component {
+  render() {
+    return (
+      <div>Total Count: {this.props.sum}</div>
+    );
+  }
+}
+class SummaryContainer extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
@@ -16,9 +23,13 @@ class Summary extends Component {
     store.unsubscribe(this.onChange);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.sum !== this.state.sum;
+  }
+
   render() {
     return (
-      <div>Total Count: { this.state.summary }</div>
+      <Summary sum={this.state.sum}></Summary>
     );
   }
 
@@ -34,9 +45,9 @@ class Summary extends Component {
         sum += state[key];
       }
     }
-    return { summary: sum };
+    return { sum: sum };
   }
 
 }
 
-export default Summary;
+export default SummaryContainer;
