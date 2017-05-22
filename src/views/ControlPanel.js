@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import CounterContainer from './Counter';
-import SummaryContainer from './Summary';
+import Counter from './Counter';
+import Summary from './Summary';
 
 class ControlPanel extends Component {
   render() {
     return (
       <div>
-        <CounterContainer caption="First" />
-        <CounterContainer caption="Second" />
-        <CounterContainer caption="Third" />
+        <Counter caption="First" />
+        <Counter caption="Second" />
+        <Counter caption="Third" />
         <hr />
         <button onClick={ () => this.forceUpdate() }>Click me to repaint!</button>
-        <SummaryContainer />
+        <Summary />
       </div>
     );
   }
 }
-
 
 export default ControlPanel;
