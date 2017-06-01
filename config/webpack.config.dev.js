@@ -9,6 +9,7 @@ var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeMod
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -42,7 +43,8 @@ module.exports = {
     // the line below with these two lines if you prefer the stock client:
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
-    require.resolve('react-dev-utils/webpackHotDevClient'),
+    // require.resolve('react-dev-utils/webpackHotDevClient'),
+    'webpack-hot-middleware/client',
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
     // Finally, this is your app's code:
@@ -121,6 +123,11 @@ module.exports = {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]'
         }
+      },
+      {
+        test: /\.js$/,
+        include: paths.appSrc,
+        loader: 'react-hot'
       },
       // Process JS with Babel.
       {
@@ -201,7 +208,10 @@ module.exports = {
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-    new webpack.optimize.CommonsChunkPlugin('common', 'static/js/common.js')
+    new webpack.optimize.CommonsChunkPlugin('common', 'static/js/common.js'),
+    new ManifestPlugin({
+      fileName: 'asset-manifest.json'
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
