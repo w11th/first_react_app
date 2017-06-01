@@ -1,47 +1,44 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import * as Actions from '../Actions';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+
+import * as actions from './actions.js';
 
 const buttonStyle = {
   margin: '10px'
 };
 
+export const stateKey = 'counter';
+
 class Counter extends Component {
   render() {
-    const {caption, onIncrement, onDecrement, value} = this.props;
+    const {onIncrement, onDecrement, value} = this.props;
     return (
       <div>
         <button style={buttonStyle} onClick={onIncrement}>+</button>
         <button style={buttonStyle} onClick={onDecrement}>-</button>
-        <span>{caption} count: {value}</span>
+        <span>count: {value}</span>
       </div>
     );
   }
 }
 
 Counter.propTypes = {
-  caption: PropTypes.string.isRequired,
   onIncrement: PropTypes.func.isRequired,
   onDecrement: PropTypes.func.isRequired,
   value: PropTypes.number.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
-    value: state[ownProps.caption]
+    value: state[stateKey] || 0
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-  return {
-    onIncrement: () => {
-      dispatch(Actions.increment(ownProps.caption));
-    },
-    onDecrement: () => {
-      dispatch(Actions.decrement(ownProps.caption));
-    }
-  }
-}
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  onIncrement: actions.increment,
+  onDecrement: actions.decrement
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter);

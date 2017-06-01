@@ -1,14 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import {Provider} from 'react-redux';
 
-import ControlPanel from './views/ControlPanel';
-import store from './Store';
+import Routes from './Routes.js';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <ControlPanel />
-  </Provider>,
+  <Routes />,
   document.getElementById('root')
 );
