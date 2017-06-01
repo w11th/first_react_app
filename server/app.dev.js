@@ -37,6 +37,10 @@ app.get('*', (req, res) => {
   });
 });
 
+app.use('/api/count', (req, res) => {
+  res.json({count: 100});
+});
+
 app.set('view engine', 'ejs');
 app.set('views', path.resolve(__dirname, 'views'));
 
